@@ -1,11 +1,15 @@
-import { ReactNode } from "react"
+import { ReactNode } from "react";
 
 interface CardProps {
-    children: ReactNode
+  children: ReactNode;
 }
 
 function Card({ children }: CardProps) {
-    return <div className="border rounded-xl">{children}</div>
+  return (
+    <div className="border border-black dark:border-white rounded-xl overflow-hidden">
+      {children}
+    </div>
+  );
 }
 
 export default Card;

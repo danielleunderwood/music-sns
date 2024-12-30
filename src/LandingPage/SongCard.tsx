@@ -1,4 +1,4 @@
-import Card from "./components/Card";
+import Card from "../components/Card";
 
 interface SongCardProps {
   url: string;
@@ -10,7 +10,6 @@ function SongCard({ url, text }: SongCardProps) {
     <Card>
       <div style={{ height: "230px" }}>
         <iframe
-          className="rounded-t-xl"
           width="100%"
           height="100%"
           src={`https://embed.odesli.co/?url=${url}&theme=dark`}
