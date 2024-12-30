@@ -40,6 +40,10 @@ function LandingPage() {
         <button
           onClick={() => {
             setPosts([{ url: postUrl, text: postText }, ...posts]);
+
+            setPostUrl("");
+
+            setPostText("");
           }}
           className="w-full rounded-t-none p-2 transition bg-slate-950 hover:bg-slate-700 text-white dark:bg-slate-300 hover:dark:bg-slate-50 dark:outline-slate-300 hover:dark:outline-slate-50  dark:text-black"
         >
