@@ -8,7 +8,7 @@ interface SongCardProps {
 function SongCard({ url, text }: SongCardProps) {
   return (
     <Card>
-      <div style={{ height: "230px" }}>
+      <div className="w-full bg-black" style={{ height: "230px" }}>
         <iframe
           width="100%"
           height="100%"
