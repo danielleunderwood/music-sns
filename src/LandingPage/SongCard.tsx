@@ -1,9 +1,7 @@
 import Card from "../components/Card";
+import PostContent from "../types/PostContent";
 
-interface SongCardProps {
-  url: string;
-  text: string;
-}
+interface SongCardProps extends PostContent {}
 
 function SongCard({ url, text }: SongCardProps) {
   return (
