@@ -1,16 +1,34 @@
-import { TextField } from "@mui/material";
-import Card from "../components/Card";
+import { Alert, TextField } from "@mui/material";
 import { useState } from "react";
 import PostContent from "../types/PostContent";
+import Card from "../components/Card";
+import Button from "../components/Button";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 interface PostBoxProps {
-  onAdd: (newPost: PostContent) => void;
+  onAdd: (newPost: PostContent) => Promise<PostgrestSingleResponse<null>>;
 }
 
 function PostBox({ onAdd }: PostBoxProps) {
   const [url, setUrl] = useState("");
 
   const [text, setText] = useState("");
+
+  const [error, setError] = useState("");
+
+  const addPost = async () => {
+    setError("");
+
+    setUrl("");
+
+    setText("");
+
+    const result = await onAdd({ url: url, text: text });
+
+    if (result.error) {
+      setError("Failed to save post. Please try again in a few minutes.");
+    }
+  };
 
   return (
     <Card>
@@ -28,18 +46,8 @@ function PostBox({ onAdd }: PostBoxProps) {
           onChange={(event) => setText(event.target.value)}
         />
       </div>
-      <button
-        onClick={() => {
-          setUrl("");
-
-          setText("");
-
-          onAdd({ url: url, text: text });
-        }}
-        className="w-full rounded-t-none p-2 transition bg-slate-950 hover:bg-slate-700 text-white dark:bg-slate-300 hover:dark:bg-slate-50 dark:outline-slate-300 hover:dark:outline-slate-50  dark:text-black"
-      >
-        Post
-      </button>
+      {error && <Alert severity="error">{error}</Alert>}
+      <Button onClick={addPost} text="Post" />
     </Card>
   );
 }
