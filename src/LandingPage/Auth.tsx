@@ -15,7 +15,12 @@ export default function Auth() {
   ) => {
     event.preventDefault();
 
-    const response = await supabase.auth.signInWithOtp({ email });
+    const response = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: import.meta.env.VITE_ENVIRONMENT_URL,
+      },
+    });
 
     setAuthResponse(response);
   };
