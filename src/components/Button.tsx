@@ -2,12 +2,25 @@ import { LinearProgress } from "@mui/material";
 import classNames from "classnames";
 import { MouseEventHandler, useState } from "react";
 
-export interface ButtonProps {
-  onClick: MouseEventHandler<HTMLButtonElement>;
+interface ButtonProps {
   text: string;
 }
 
-function Button({ onClick, text }: ButtonProps) {
+interface SubmitButtonProps extends ButtonProps {
+  type: "submit";
+}
+
+interface StandardButtonProps extends ButtonProps {
+  onClick: MouseEventHandler<HTMLButtonElement>;
+
+  type: "reset" | "button" | undefined;
+}
+
+const isStandardButtonProps = (
+  props: ButtonProps
+): props is StandardButtonProps => "onClick" in props;
+
+function Button(props: SubmitButtonProps | StandardButtonProps) {
   const [loading, setLoading] = useState(false);
 
   return (
@@ -17,7 +30,9 @@ function Button({ onClick, text }: ButtonProps) {
         onClick={async (event) => {
           setLoading(true);
 
-          await Promise.resolve(onClick(event));
+          if (isStandardButtonProps(props)) {
+            await Promise.resolve(props.onClick(event));
+          }
 
           setLoading(false);
         }}
@@ -33,8 +48,9 @@ function Button({ onClick, text }: ButtonProps) {
           },
           "w-full rounded-t-none p-2 transition bg-slate-950 text-white dark:bg-slate-300 dark:text-black"
         )}
+        type={props.type}
       >
-        {text}
+        {props.text}
       </button>
     </div>
   );

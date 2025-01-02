@@ -31,24 +31,28 @@ function PostBox({ onAdd }: PostBoxProps) {
   };
 
   return (
-    <Card>
-      <div className="flex flex-col gap-2 p-4">
-        <TextField
-          label="Song link"
-          size="small"
-          value={url}
-          onChange={(event) => setUrl(event.target.value)}
-        />
-        <TextField
-          label="Makes me think of..."
-          size="small"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-        />
-      </div>
-      {error && <Alert severity="error">{error}</Alert>}
-      <Button onClick={addPost} text="Post" />
-    </Card>
+    <form onSubmit={addPost}>
+      <Card>
+        <div className="flex flex-col gap-2 p-4">
+          <TextField
+            label="Song link"
+            size="small"
+            value={url}
+            onChange={(event) => setUrl(event.target.value)}
+            required
+          />
+          <TextField
+            label="Makes me think of..."
+            size="small"
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+            required
+          />
+        </div>
+        {error && <Alert severity="error">{error}</Alert>}
+        <Button text="Post" type="submit" />
+      </Card>
+    </form>
   );
 }
 

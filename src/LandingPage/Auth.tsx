@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEventHandler, useState } from "react";
 import supabase from "../utils/supabase";
 import { Alert, TextField } from "@mui/material";
 import Button from "../components/Button";
@@ -10,9 +10,7 @@ export default function Auth() {
 
   const [authResponse, setAuthResponse] = useState<AuthOtpResponse>();
 
-  const handleLogin: React.MouseEventHandler<HTMLButtonElement> = async (
-    event
-  ) => {
+  const handleLogin: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
     const response = await supabase.auth.signInWithOtp({
@@ -26,28 +24,31 @@ export default function Auth() {
   };
 
   return (
-    <Card>
-      <div className="flex flex-col items-center p-4">
-        <h1>Want to make a post?</h1>
-        <h2>Enter your email to receive a login link.</h2>
-        <TextField
-          onChange={(event) => setEmail(event.target.value)}
-          fullWidth
-          size="small"
-          label="Email"
-          value={email}
-          disabled={Boolean(authResponse?.data)}
-        />
-      </div>
-      {authResponse &&
-        (authResponse?.error ? (
-          <Alert severity="error">
-            Failed to send email. Please try again in a few minutes.
-          </Alert>
-        ) : (
-          <Alert severity="success">Email sent!</Alert>
-        ))}
-      <Button onClick={handleLogin} text="Send" />
-    </Card>
+    <form onSubmit={handleLogin}>
+      <Card>
+        <div className="flex flex-col items-center p-4">
+          <h1>Want to make a post?</h1>
+          <h2>Enter your email to receive a login link.</h2>
+          <TextField
+            onChange={(event) => setEmail(event.target.value)}
+            fullWidth
+            size="small"
+            label="Email"
+            value={email}
+            disabled={Boolean(authResponse?.data)}
+            required
+          />
+        </div>
+        {authResponse &&
+          (authResponse?.error ? (
+            <Alert severity="error">
+              Failed to send email. Please try again in a few minutes.
+            </Alert>
+          ) : (
+            <Alert severity="success">Email sent!</Alert>
+          ))}
+        <Button text="Send" type="submit" />
+      </Card>
+    </form>
   );
 }
