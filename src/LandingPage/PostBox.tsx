@@ -39,6 +39,7 @@ function PostBox({ onAdd }: PostBoxProps) {
             size="small"
             value={url}
             onChange={(event) => setUrl(event.target.value)}
+            autoComplete="off"
             required
           />
           <TextField
@@ -46,6 +47,7 @@ function PostBox({ onAdd }: PostBoxProps) {
             size="small"
             value={text}
             onChange={(event) => setText(event.target.value)}
+            autoComplete="off"
             required
           />
         </div>
