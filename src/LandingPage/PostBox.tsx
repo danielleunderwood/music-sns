@@ -50,7 +50,7 @@ function PostBox({ onAdd }: PostBoxProps) {
           />
         </div>
         {error && <Alert severity="error">{error}</Alert>}
-        <Button text="Post" type="submit" />
+        <Button type="submit">Post</Button>
       </Card>
     </form>
   );

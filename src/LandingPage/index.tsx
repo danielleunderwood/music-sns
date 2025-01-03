@@ -6,12 +6,13 @@ import PostBox from "./PostBox";
 import { useState } from "react";
 import PostContent from "../types/PostContent";
 import Auth from "./Auth";
-import { Session } from "@supabase/supabase-js";
+import SupabaseRecord from "../types/SupabaseRecord";
+import useStore from "../store";
 
 function LandingPage() {
-  const [posts, setPosts] = useState<PostContent[]>([]);
+  const { session } = useStore();
 
-  const [session, setSession] = useState<Session | null>(null);
+  const [posts, setPosts] = useState<SupabaseRecord<PostContent>[]>([]);
 
   const { status } = useAsyncEffect({
     effect: async () => {
@@ -21,24 +22,14 @@ function LandingPage() {
         .order("created_at", { ascending: false })
         .range(0, 20);
 
-      setPosts(data as PostContent[]);
+      if (!data) {
+        return [];
+      }
+
+      setPosts(data as SupabaseRecord<PostContent>[]);
     },
     deps: [],
     initialValue: undefined,
-  });
-
-  useAsyncEffect({
-    effect: async () => {
-      const sessionData = await supabase.auth.getSession();
-
-      setSession(sessionData.data.session);
-
-      supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session);
-      });
-    },
-    deps: [],
-    initialValue: null,
   });
 
   return (
@@ -49,7 +40,9 @@ function LandingPage() {
             const result = await supabase.from("posts").insert(newPost);
 
             if (!result.error) {
-              setPosts([newPost, ...posts]);
+              // Add pseudo ID for key purposes.
+              // Date.now() should be fine since user shouldn't be posting more than once a millisecond.
+              setPosts([{ ...newPost, id: Date.now().toString() }, ...posts]);
             }
 
             return result;
@@ -67,8 +60,8 @@ function LandingPage() {
           <CircularProgress />
         </div>
       )}
-      {posts.map(({ url, text }) => (
-        <SongCard key={text} url={url} text={text} />
+      {posts.map(({ id, url, text }) => (
+        <SongCard key={id} url={url} text={text} />
       ))}
     </div>
   );

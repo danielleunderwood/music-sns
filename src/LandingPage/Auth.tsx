@@ -47,7 +47,7 @@ export default function Auth() {
           ) : (
             <Alert severity="success">Email sent!</Alert>
           ))}
-        <Button text="Send" type="submit" />
+        <Button type="submit">Send</Button>
       </Card>
     </form>
   );

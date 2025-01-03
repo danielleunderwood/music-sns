@@ -14,7 +14,7 @@ function SongCard({ url, text }: SongCardProps) {
           sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox"
         />
       </div>
-      {text}
+      <div className="px-4 py-2">{text}</div>
     </Card>
   );
 }

@@ -1,9 +1,9 @@
 import { LinearProgress } from "@mui/material";
 import classNames from "classnames";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, ReactNode, useState } from "react";
 
 interface ButtonProps {
-  text: string;
+  children: ReactNode;
 }
 
 interface SubmitButtonProps extends ButtonProps {
@@ -38,19 +38,19 @@ function Button(props: SubmitButtonProps | StandardButtonProps) {
         }}
         disabled={loading}
         className={classNames(
+          "w-full p-1 transition border-b-4 bg-slate-950 dark:bg-slate-300 text-white dark:text-black border-b-slate-950 dark:border-b-slate-300",
           {
             "bg-slate-600 text-slate-400 dark:bg-slate-400 dark:text-slate-600":
               loading,
           },
           {
-            "border-t-4 border-slate-950 dark:border-slate-300 hover:border-slate-700 hover:dark:border-slate-50":
+            "border-t-4 border-slate-950 dark:border-slate-300 hover:border-slate-500 hover:dark:border-slate-50":
               !loading,
-          },
-          "w-full rounded-t-none p-2 transition bg-slate-950 text-white dark:bg-slate-300 dark:text-black"
+          }
         )}
         type={props.type}
       >
-        {props.text}
+        {props.children}
       </button>
     </div>
   );
