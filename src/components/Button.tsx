@@ -17,7 +17,7 @@ interface StandardButtonProps extends ButtonProps {
 }
 
 const isStandardButtonProps = (
-  props: ButtonProps
+  props: ButtonProps,
 ): props is StandardButtonProps => "onClick" in props;
 
 function Button(props: SubmitButtonProps | StandardButtonProps) {
@@ -46,7 +46,7 @@ function Button(props: SubmitButtonProps | StandardButtonProps) {
           {
             "border-t-4 border-slate-950 dark:border-slate-300 hover:border-slate-500 hover:dark:border-slate-50":
               !loading,
-          }
+          },
         )}
         type={props.type}
       >

@@ -1,10 +1,5 @@
 import { DependencyList, useEffect, useState } from "react";
-
-export enum Status {
-  Idle,
-  Loading,
-  Error,
-}
+import { Status } from "../types/status";
 
 interface UseAsyncEffectProps<T> {
   effect: () => Promise<T>;

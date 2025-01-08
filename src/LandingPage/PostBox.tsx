@@ -1,12 +1,14 @@
 import { Alert, TextField } from "@mui/material";
 import { useState } from "react";
-import PostContent from "../types/PostContent";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import { Tables } from "../utils/database.types";
 
 interface PostBoxProps {
-  onAdd: (newPost: PostContent) => Promise<PostgrestSingleResponse<null>>;
+  onAdd: (
+    newPost: Pick<Tables<"posts">, "text" | "url">,
+  ) => Promise<PostgrestSingleResponse<null>>;
 }
 
 function PostBox({ onAdd }: PostBoxProps) {

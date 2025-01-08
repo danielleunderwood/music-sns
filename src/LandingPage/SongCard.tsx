@@ -1,13 +1,14 @@
 import Card from "../components/Card";
-import PostContent from "../types/PostContent";
+import { Tables } from "../utils/database.types";
 
-interface SongCardProps extends PostContent {}
+type SongCardProps = Pick<Tables<"posts">, "text" | "url">;
 
 function SongCard({ url, text }: SongCardProps) {
   return (
     <Card>
       <div className="w-full bg-black" style={{ height: "230px" }}>
         <iframe
+          title={url}
           width="100%"
           height="100%"
           src={`https://embed.odesli.co/?url=${url}&theme=dark`}

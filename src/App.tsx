@@ -1,9 +1,17 @@
-import { createTheme, ThemeProvider } from "@mui/material";
+import {
+  Alert,
+  CircularProgress,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
 import LandingPage from "./LandingPage";
 import TopNav from "./TopNav";
 import useAsyncEffect from "./hooks/useAsyncEffect";
 import supabase from "./utils/supabase";
 import useStore from "./store";
+import { Route, Routes } from "react-router";
+import UserPage from "./UserPage";
+import { Status } from "./types/status";
 
 const theme = createTheme({
   colorSchemes: {
@@ -14,7 +22,7 @@ const theme = createTheme({
 function App() {
   const { setSession } = useStore();
 
-  useAsyncEffect({
+  const { status } = useAsyncEffect({
     effect: async () => {
       const sessionData = await supabase.auth.getSession();
 
@@ -28,11 +36,26 @@ function App() {
     initialValue: null,
   });
 
+  if (status === Status.Loading) {
+    return <CircularProgress />;
+  }
+
+  if (status === Status.Error) {
+    return (
+      <Alert severity="error">
+        Failed to retrieve session info. Please try again.
+      </Alert>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <TopNav />
       <div className="px-2 md:px-12 py-4">
-        <LandingPage />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/user/:userId" element={<UserPage />} />
+        </Routes>
       </div>
     </ThemeProvider>
   );

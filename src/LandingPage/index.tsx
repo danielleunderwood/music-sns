@@ -1,18 +1,20 @@
 import { Alert, CircularProgress } from "@mui/material";
 import SongCard from "./SongCard";
-import useAsyncEffect, { Status } from "../hooks/useAsyncEffect";
+import useAsyncEffect from "../hooks/useAsyncEffect";
 import supabase from "../utils/supabase";
 import PostBox from "./PostBox";
 import { useState } from "react";
-import PostContent from "../types/PostContent";
 import Auth from "./Auth";
-import SupabaseRecord from "../types/SupabaseRecord";
 import useStore from "../store";
+import { Tables } from "../utils/database.types";
+import { Status } from "../types/status";
 
 function LandingPage() {
   const { session } = useStore();
 
-  const [posts, setPosts] = useState<SupabaseRecord<PostContent>[]>([]);
+  const [posts, setPosts] = useState<
+    Pick<Tables<"posts">, "text" | "url" | "id">[]
+  >([]);
 
   const { status } = useAsyncEffect({
     effect: async () => {
@@ -26,7 +28,7 @@ function LandingPage() {
         return [];
       }
 
-      setPosts(data as SupabaseRecord<PostContent>[]);
+      setPosts(data);
     },
     deps: [],
     initialValue: undefined,
