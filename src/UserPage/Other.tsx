@@ -57,7 +57,7 @@ function Other({ userId }: OtherProps) {
     profileRetrievalStatus === Status.Loading ||
     subscriptionRetrievalStatus === Status.Loading
   ) {
-    <CircularProgress />;
+    return <CircularProgress />;
   }
 
   if (!profile) {
