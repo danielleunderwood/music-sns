@@ -13,7 +13,7 @@ function LandingPage() {
   const { session } = useStore();
 
   const [posts, setPosts] = useState<
-    Pick<Tables<"posts">, "text" | "url" | "id">[]
+    Pick<Tables<"posts">, "text" | "url" | "id" | "user_id">[]
   >([]);
 
   const { status } = useAsyncEffect({
@@ -44,7 +44,14 @@ function LandingPage() {
             if (!result.error) {
               // Add pseudo ID for key purposes.
               // Date.now() should be fine since user shouldn't be posting more than once a millisecond.
-              setPosts([{ ...newPost, id: Date.now().toString() }, ...posts]);
+              setPosts([
+                {
+                  ...newPost,
+                  user_id: session.user.id,
+                  id: Date.now().toString(),
+                },
+                ...posts,
+              ]);
             }
 
             return result;
@@ -62,8 +69,8 @@ function LandingPage() {
           <CircularProgress />
         </div>
       )}
-      {posts.map(({ id, url, text }) => (
-        <SongCard key={id} url={url} text={text} />
+      {posts.map(({ id, url, text, user_id }) => (
+        <SongCard key={id} url={url} text={text} user_id={user_id} />
       ))}
     </div>
   );
