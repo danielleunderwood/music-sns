@@ -35,7 +35,7 @@ function LandingPage() {
   });
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-[48rem] min-w-0">
+    <div className="flex flex-col gap-4">
       {session ? (
         <PostBox
           onAdd={async (newPost) => {

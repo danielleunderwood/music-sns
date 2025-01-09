@@ -51,11 +51,13 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <TopNav />
-      <div className="px-2 md:px-12 py-4">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/user/:userId" element={<UserPage />} />
-        </Routes>
+      <div className="flex justify-center">
+        <div className="w-full max-w-[48rem] px-2 py-4">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/user/:userId" element={<UserPage />} />
+          </Routes>
+        </div>
       </div>
     </ThemeProvider>
   );
