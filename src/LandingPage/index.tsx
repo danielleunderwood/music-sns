@@ -1,43 +1,23 @@
-import { Alert, CircularProgress } from "@mui/material";
-import SongCard from "./SongCard";
-import useAsyncEffect from "../hooks/useAsyncEffect";
 import supabase from "../utils/supabase";
-import PostBox from "./PostBox";
-import { useState } from "react";
+import PostCreationBox from "./PostCreationBox";
 import Auth from "./Auth";
 import useStore from "../store";
+import Posts from "./Posts";
+import { useState } from "react";
 import { Tables } from "../utils/database.types";
-import { Status } from "../types/status";
+import SongCard from "./SongCard";
 
 function LandingPage() {
   const { session } = useStore();
 
   const [posts, setPosts] = useState<
-    Pick<Tables<"posts">, "text" | "url" | "id" | "user_id">[]
+    Pick<Tables<"posts">, "text" | "url" | "id">[]
   >([]);
-
-  const { status } = useAsyncEffect({
-    effect: async () => {
-      const { data } = await supabase
-        .from("posts")
-        .select()
-        .order("created_at", { ascending: false })
-        .range(0, 20);
-
-      if (!data) {
-        return [];
-      }
-
-      setPosts(data);
-    },
-    deps: [],
-    initialValue: undefined,
-  });
 
   return (
     <div className="flex flex-col gap-4">
       {session ? (
-        <PostBox
+        <PostCreationBox
           onAdd={async (newPost) => {
             const result = await supabase.from("posts").insert(newPost);
 
@@ -47,7 +27,6 @@ function LandingPage() {
               setPosts([
                 {
                   ...newPost,
-                  user_id: session.user.id,
                   id: Date.now().toString(),
                 },
                 ...posts,
@@ -60,18 +39,15 @@ function LandingPage() {
       ) : (
         <Auth />
       )}
-
-      {status === Status.Error && (
-        <Alert severity="error">Failed to load posts. Please try again.</Alert>
-      )}
-      {status === Status.Loading && (
-        <div className="flex justify-center w-full">
-          <CircularProgress />
-        </div>
-      )}
-      {posts.map(({ id, url, text, user_id }) => (
-        <SongCard key={id} url={url} text={text} user_id={user_id} />
+      {posts.map(({ id, url, text }) => (
+        <SongCard
+          key={id}
+          url={url}
+          text={text}
+          user_id={session?.user.id ?? ""}
+        />
       ))}
+      <Posts />
     </div>
   );
 }

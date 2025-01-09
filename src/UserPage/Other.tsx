@@ -6,6 +6,7 @@ import useAsyncEffect from "../hooks/useAsyncEffect";
 import supabase from "../utils/supabase";
 import useStore from "../store";
 import { Status } from "../types/status";
+import Posts from "../LandingPage/Posts";
 
 interface OtherProps {
   /** A UUID. */
@@ -68,32 +69,35 @@ function Other({ userId }: OtherProps) {
     );
   }
 
-  if (subscription) {
+  if (!subscription) {
     return (
       <Card>
-        <h1 className="flex justify-center p-4">
-          You are following {profile.display_name}.
-        </h1>
+        <form
+          onSubmit={async () => {
+            await supabase.from("subscriptions").insert({
+              subscriber_id: session.user.id,
+              subscribee_id: userId,
+            });
+          }}
+        >
+          <h1 className="flex justify-center p-4">
+            Follow {profile.display_name}?
+          </h1>
+          <Button type="submit">Follow</Button>
+        </form>
       </Card>
     );
   }
 
   return (
-    <Card>
-      <form
-        onSubmit={async () => {
-          await supabase.from("subscriptions").insert({
-            subscriber_id: session.user.id,
-            subscribee_id: userId,
-          });
-        }}
-      >
-        <h1 className="flex justify-center p-4">
-          Follow {profile.display_name}?
-        </h1>
-        <Button type="submit">Follow</Button>
-      </form>
-    </Card>
+    <div>
+      <div className="fixed h-max bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 p-2">
+        Viewing <span className="font-bold">{profile.display_name}</span>'s
+        posts
+      </div>
+      <div className="h-12"></div>
+      <Posts userId={userId} />
+    </div>
   );
 }
 

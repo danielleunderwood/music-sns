@@ -5,13 +5,13 @@ import Button from "../components/Button";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { Tables } from "../utils/database.types";
 
-interface PostBoxProps {
+interface PostCreationBoxProps {
   onAdd: (
     newPost: Pick<Tables<"posts">, "text" | "url">,
   ) => Promise<PostgrestSingleResponse<null>>;
 }
 
-function PostBox({ onAdd }: PostBoxProps) {
+function PostCreationBox({ onAdd }: PostCreationBoxProps) {
   const [url, setUrl] = useState("");
 
   const [text, setText] = useState("");
@@ -60,4 +60,4 @@ function PostBox({ onAdd }: PostBoxProps) {
   );
 }
 
-export default PostBox;
+export default PostCreationBox;

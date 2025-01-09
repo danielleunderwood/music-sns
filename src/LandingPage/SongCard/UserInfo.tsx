@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import useAsyncEffect from "../../hooks/useAsyncEffect";
 import { Status } from "../../types/status";
 import supabase from "../../utils/supabase";
@@ -44,7 +45,14 @@ function UserInfo({ userId }: UserInfoProps) {
     );
   }
 
-  return <div className="text-sm text-gray-500">{profile.display_name}</div>;
+  return (
+    <div className="text-sm text-gray-500">
+      {"From "}
+      <Link className="font-bold" to={`user/${userId}`}>
+        {profile.display_name}
+      </Link>
+    </div>
+  );
 }
 
 export default UserInfo;

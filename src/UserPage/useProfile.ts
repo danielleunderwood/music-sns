@@ -1,5 +1,4 @@
 import useAsyncEffect from "../hooks/useAsyncEffect";
-import { Tables } from "../utils/database.types";
 import supabase from "../utils/supabase";
 
 const useProfile = (userId: string) => {
@@ -11,13 +10,13 @@ const useProfile = (userId: string) => {
         .eq("id", userId)
         .range(0, 0);
 
-      if (data) {
-        const [profile] = data as Tables<"profiles">[];
-
-        return profile;
+      if (!data) {
+        return undefined;
       }
 
-      throw Error("Failed to retrieve profile");
+      const [profile] = data;
+
+      return profile;
     },
     deps: [],
     initialValue: undefined,
