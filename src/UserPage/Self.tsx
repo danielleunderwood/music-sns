@@ -7,6 +7,7 @@ import useStore from "../store";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import useProfile from "./useProfile";
 import { Status } from "../types/status";
+import Image from "../components/Image";
 
 function Self() {
   const { session } = useStore();
@@ -54,10 +55,12 @@ function Self() {
     <Card>
       <form onSubmit={(event) => saveChanges(event)}>
         <div className="flex flex-col sm:flex-row p-2 gap-2">
-          <img
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${link}`}
-            alt="QR code"
-          />
+          <div className="w-full sm:w-40 aspect-square">
+            <Image
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${link}`}
+              alt="QR code"
+            />
+          </div>
           <div className="flex flex-col gap-2">
             <TextField
               label="Display name"
