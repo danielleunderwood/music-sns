@@ -64,7 +64,7 @@ function TopNav() {
   return (
     <>
       <ElevationScroll>
-        <AppBar>
+        <AppBar position="sticky">
           <Toolbar className="bg-white dark:bg-zinc-900">
             <div className="flex justify-between items-center w-full">
               <Link
@@ -108,7 +108,6 @@ function TopNav() {
           </Toolbar>
         </AppBar>
       </ElevationScroll>
-      <Toolbar />
     </>
   );
 }
