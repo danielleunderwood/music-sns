@@ -8,6 +8,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import useProfile from "./useProfile";
 import { Status } from "../types/status";
 import Image from "../components/Image";
+import Posts from "../LandingPage/Posts";
 
 function Self() {
   const { session } = useStore();
@@ -52,50 +53,53 @@ function Self() {
   };
 
   return (
-    <Card>
-      <form onSubmit={(event) => saveChanges(event)}>
-        <div className="flex flex-col sm:flex-row p-2 gap-2">
-          <div className="w-full sm:w-40 aspect-square">
-            <Image
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${link}`}
-              alt="QR code"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <TextField
-              label="Display name"
-              value={displayName || value.display_name}
-              onChange={(event) => {
-                setDisplayName(event.target.value);
+    <div className="flex flex-col gap-4">
+      <Card>
+        <form onSubmit={(event) => saveChanges(event)}>
+          <div className="flex flex-col sm:flex-row p-2 gap-2">
+            <div className="w-full sm:w-40 aspect-square">
+              <Image
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${link}`}
+                alt="QR code"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <TextField
+                label="Display name"
+                value={displayName || value.display_name}
+                onChange={(event) => {
+                  setDisplayName(event.target.value);
 
-                setSaveResult(undefined);
-              }}
-            />
-            <div className="text-sm text-gray-500">
-              To invite someone to view your posts, you can have them scan the
-              QR code, or you can
-              <button
-                type="button"
-                onClick={async () => {
-                  await navigator.clipboard.writeText(link);
+                  setSaveResult(undefined);
                 }}
-                className="px-1 font-bold text-blue-600 dark:text-blue-400 transition rounded-full hover:bg-green-100 hover:dark:bg-green-900"
-              >
-                click here
-              </button>
-              to copy a link you can send them.
+              />
+              <div className="text-sm text-gray-500">
+                To invite someone to view your posts, you can have them scan the
+                QR code, or you can
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(link);
+                  }}
+                  className="px-1 font-bold text-blue-600 dark:text-blue-400 transition rounded-full hover:bg-green-100 hover:dark:bg-green-900"
+                >
+                  click here
+                </button>
+                to copy a link you can send them.
+              </div>
             </div>
           </div>
-        </div>
-        {saveResult &&
-          (saveResult.error ? (
-            <Alert severity="error">Failed to save. Please try again.</Alert>
-          ) : (
-            <Alert severity="success">Saved!</Alert>
-          ))}
-        <Button type="submit">Save changes</Button>
-      </form>
-    </Card>
+          {saveResult &&
+            (saveResult.error ? (
+              <Alert severity="error">Failed to save. Please try again.</Alert>
+            ) : (
+              <Alert severity="success">Saved!</Alert>
+            ))}
+          <Button type="submit">Save changes</Button>
+        </form>
+      </Card>
+      <Posts userId={session?.user.id} />
+    </div>
   );
 }
 
