@@ -1,4 +1,3 @@
-import { LinearProgress } from "@mui/material";
 import classNames from "classnames";
 import { MouseEventHandler, ReactNode, useState } from "react";
 
@@ -24,8 +23,11 @@ function Button(props: SubmitButtonProps | StandardButtonProps) {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div>
-      {loading && <LinearProgress />}
+    <div
+      className={classNames("relative overflow-hidden", {
+        "rounded-full": props.type !== "submit",
+      })}
+    >
       <button
         onClick={async (event) => {
           setLoading(true);
@@ -38,20 +40,36 @@ function Button(props: SubmitButtonProps | StandardButtonProps) {
         }}
         disabled={loading}
         className={classNames(
-          "w-full p-1 transition border-b-4 bg-slate-950 dark:bg-slate-300 text-white dark:text-black border-b-slate-950 dark:border-b-slate-300",
+          "w-full p-1 transition",
           {
-            "bg-slate-600 text-slate-400 dark:bg-slate-400 dark:text-slate-600":
-              loading,
+            "bg-slate-950 dark:bg-slate-300 text-white dark:text-black hover:bg-slate-500 hover:dark:bg-slate-50 border-black dark:border-white":
+              !loading && props.type !== "reset",
           },
           {
-            "border-t-4 border-slate-950 dark:border-slate-300 hover:border-slate-500 hover:dark:border-slate-50":
-              !loading,
+            "bg-slate-600 dark:bg-slate-400 text-slate-400 dark:text-slate-600 border-slate-600 dark:border-slate-400 ":
+              loading && props.type !== "reset",
+          },
+          { "border rounded-full": props.type !== "submit" },
+          {
+            "bg-red-500 dark:bg-red-600 text-white dark:text-black border-red-800 dark:border-red-400 hover:bg-red-400 hover:dark:bg-red-400":
+              !loading && props.type === "reset",
+          },
+          {
+            "bg-red-200 dark:bg-red-800 text-red-50 dark:text-red-950 border-red-200 dark:border-red-800":
+              loading && props.type === "reset",
           },
         )}
         type={props.type}
       >
         {props.children}
       </button>
+      {loading && (
+        <div
+          aria-busy
+          aria-hidden
+          className="w-full h-full absolute top-0 opacity-50 animate-wipe bg-gradient-to-l from-white dark:from-zinc-900"
+        ></div>
+      )}
     </div>
   );
 }

@@ -19,18 +19,17 @@ function LandingPage() {
       {session ? (
         <PostCreationBox
           onAdd={async (newPost) => {
-            const result = await supabase.from("posts").insert(newPost);
+            const result = await supabase
+              .from("posts")
+              .insert(newPost)
+              .select();
 
             if (!result.error) {
+              const [newPost] = result.data;
+
               // Add pseudo ID for key purposes.
               // Date.now() should be fine since user shouldn't be posting more than once a millisecond.
-              setPosts([
-                {
-                  ...newPost,
-                  id: Date.now().toString(),
-                },
-                ...posts,
-              ]);
+              setPosts([newPost, ...posts]);
             }
 
             return result;
@@ -39,15 +38,18 @@ function LandingPage() {
       ) : (
         <Auth />
       )}
-      {posts.map(({ id, url, text }) => (
-        <SongCard
-          key={id}
-          url={url}
-          text={text}
-          user_id={session?.user.id ?? ""}
-        />
-      ))}
-      <Posts />
+      <div className="flex flex-col gap-2">
+        {posts.map(({ id, url, text }) => (
+          <SongCard
+            key={id}
+            id={id}
+            url={url}
+            text={text}
+            user_id={session?.user.id ?? ""}
+          />
+        ))}
+        <Posts />
+      </div>
     </div>
   );
 }

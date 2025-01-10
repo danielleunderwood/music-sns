@@ -49,7 +49,7 @@ function Posts({ userId }: PostsProps) {
   return (
     <div className="flex flex-col gap-2">
       {posts.map(({ id, url, text, user_id }) => (
-        <SongCard key={id} url={url} text={text} user_id={user_id} />
+        <SongCard key={id} id={id} url={url} text={text} user_id={user_id} />
       ))}
     </div>
   );

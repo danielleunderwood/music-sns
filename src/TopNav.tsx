@@ -83,6 +83,7 @@ function TopNav() {
                     aria-controls={open ? "basic-menu" : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? "true" : undefined}
+                    aria-description="User Actions"
                   >
                     <UserCircleIcon className="h-10 w-10 text-black dark:text-white" />
                   </IconButton>

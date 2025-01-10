@@ -8,7 +8,7 @@ import { Tables } from "../utils/database.types";
 interface PostCreationBoxProps {
   onAdd: (
     newPost: Pick<Tables<"posts">, "text" | "url">,
-  ) => Promise<PostgrestSingleResponse<null>>;
+  ) => Promise<PostgrestSingleResponse<Tables<"posts">[]>>;
 }
 
 function PostCreationBox({ onAdd }: PostCreationBoxProps) {
