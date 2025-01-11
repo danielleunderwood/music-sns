@@ -25,15 +25,33 @@ function PostCreationBox({ onAdd }: PostCreationBoxProps) {
 
     setText("");
 
-    const result = await onAdd({ url: url, text: text });
+    const linksResult = await fetch(
+      `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(url)}`,
+    );
 
-    if (result.error) {
+    if (linksResult.status > 300) {
+      if (linksResult.status < 500) {
+        setError("Failed to retrieve song information. Cannot post.");
+
+        return;
+      }
+
+      setError(
+        "Failed to retrieve song information. Please try again in a few minutes.",
+      );
+
+      return;
+    }
+
+    const addResult = await onAdd({ url: url, text: text });
+
+    if (addResult.error) {
       setError("Failed to save post. Please try again in a few minutes.");
     }
   };
 
   return (
-    <form onSubmit={addPost}>
+    <form action={addPost}>
       <Card>
         <div className="flex flex-col gap-2 p-4">
           <TextField

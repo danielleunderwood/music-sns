@@ -70,16 +70,16 @@ function Other({ userId }: OtherProps) {
   }
 
   if (!subscription) {
+    const handleFollow = async () => {
+      await supabase.from("subscriptions").insert({
+        subscriber_id: session.user.id,
+        subscribee_id: userId,
+      });
+    };
+
     return (
       <Card>
-        <form
-          onSubmit={async () => {
-            await supabase.from("subscriptions").insert({
-              subscriber_id: session.user.id,
-              subscribee_id: userId,
-            });
-          }}
-        >
+        <form action={handleFollow}>
           <h1 className="flex justify-center p-4">
             Follow {profile.display_name}?
           </h1>

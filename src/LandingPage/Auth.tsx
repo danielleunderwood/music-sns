@@ -1,4 +1,4 @@
-import { FormEventHandler, useState } from "react";
+import { useState } from "react";
 import supabase from "../utils/supabase";
 import { Alert, TextField } from "@mui/material";
 import Button from "../components/Button";
@@ -10,9 +10,7 @@ export default function Auth() {
 
   const [authResponse, setAuthResponse] = useState<AuthOtpResponse>();
 
-  const handleLogin: FormEventHandler<HTMLFormElement> = async (event) => {
-    event.preventDefault();
-
+  const handleLogin: (formData: FormData) => Promise<void> = async () => {
     const response = await supabase.auth.signInWithOtp({
       email,
       options: {
@@ -24,7 +22,7 @@ export default function Auth() {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form action={handleLogin}>
       <Card>
         <div className="flex flex-col items-center p-4">
           <h1>Want to make a post?</h1>

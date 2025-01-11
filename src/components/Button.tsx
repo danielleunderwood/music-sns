@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { MouseEventHandler, ReactNode, useState } from "react";
+import { useFormStatus } from "react-dom";
 
 interface ButtonProps {
   children: ReactNode;
@@ -20,7 +21,12 @@ const isStandardButtonProps = (
 ): props is StandardButtonProps => "onClick" in props;
 
 function Button(props: SubmitButtonProps | StandardButtonProps) {
-  const [loading, setLoading] = useState(false);
+  const formStatus = useFormStatus();
+
+  const [internalLoading, setInternalLoading] = useState(false);
+
+  const loading =
+    formStatus.pending || (isStandardButtonProps(props) && internalLoading);
 
   return (
     <div
@@ -30,13 +36,13 @@ function Button(props: SubmitButtonProps | StandardButtonProps) {
     >
       <button
         onClick={async (event) => {
-          setLoading(true);
+          setInternalLoading(true);
 
           if (isStandardButtonProps(props)) {
             await Promise.resolve(props.onClick(event));
           }
 
-          setLoading(false);
+          setInternalLoading(false);
         }}
         disabled={loading}
         className={classNames(

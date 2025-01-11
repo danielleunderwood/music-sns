@@ -2,7 +2,7 @@ import { Alert, CircularProgress, TextField } from "@mui/material";
 import Card from "../components/Card";
 import supabase from "../utils/supabase";
 import Button from "../components/Button";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import useStore from "../store";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import useProfile from "./useProfile";
@@ -12,8 +12,6 @@ import Posts from "../LandingPage/Posts";
 
 function Self() {
   const { session } = useStore();
-
-  const link = window.location.toString();
 
   const [displayName, setDisplayName] = useState("");
 
@@ -37,13 +35,15 @@ function Self() {
     );
   }
 
-  const saveChanges = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  if (!session) {
+    return (
+      <Alert severity="error">Cannot view profiles when not logged in.</Alert>
+    );
+  }
 
-    if (!session) {
-      return;
-    }
+  const link = window.location.toString();
 
+  const saveChanges = async () => {
     const result = await supabase
       .from("profiles")
       .update({ display_name: displayName })
@@ -55,7 +55,7 @@ function Self() {
   return (
     <div className="flex flex-col gap-4">
       <Card>
-        <form onSubmit={(event) => saveChanges(event)}>
+        <form action={saveChanges}>
           <div className="flex flex-col sm:flex-row p-2 gap-2">
             <div className="w-full sm:w-40 aspect-square">
               <Image
@@ -98,7 +98,7 @@ function Self() {
           <Button type="submit">Save changes</Button>
         </form>
       </Card>
-      <Posts userId={session?.user.id} />
+      <Posts userId={session.user.id} />
     </div>
   );
 }
