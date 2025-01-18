@@ -2,11 +2,13 @@ import { Link } from "react-router";
 import useAsyncEffect from "../../hooks/useAsyncEffect";
 import { Status } from "../../types/status";
 import supabase from "../../utils/supabase";
+import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 
 interface UserInfoProps {
   /** A UUID. */
   userId: string;
 }
+
 function UserInfo({ userId }: UserInfoProps) {
   const { value: profile, status } = useAsyncEffect({
     effect: async () => {
@@ -46,10 +48,11 @@ function UserInfo({ userId }: UserInfoProps) {
   }
 
   return (
-    <div className="text-sm text-gray-500">
+    <div className="flex gap-1">
       {"From "}
-      <Link className="font-bold" to={`user/${userId}`}>
+      <Link className="flex items-center font-bold gap-1" to={`user/${userId}`}>
         {profile.display_name}
+        <ArrowRightCircleIcon className="h-4" />
       </Link>
     </div>
   );

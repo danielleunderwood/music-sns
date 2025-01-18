@@ -1,17 +1,11 @@
-import {
-  AppBar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  useScrollTrigger,
-} from "@mui/material";
-import { cloneElement, useState, MouseEvent } from "react";
+import { AppBar, Toolbar, useScrollTrigger } from "@mui/material";
+import { cloneElement } from "react";
 import supabase from "./utils/supabase";
 import useStore from "./store";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { Link, NavigateOptions, To, useNavigate } from "react-router";
 import useUserLink from "./hooks/useUserLink";
+import PopupMenu from "./components/PopupMenu";
 
 interface ElevationScrollProps {
   children?: React.ReactElement<{ elevation?: number }>;
@@ -37,22 +31,8 @@ function TopNav() {
 
   const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const navigateAndCloseMenu = async (to: To, options?: NavigateOptions) => {
     await Promise.resolve(navigate(to, options));
-
-    handleClose();
   };
 
   const logout = async () => {
@@ -69,41 +49,25 @@ function TopNav() {
             <div className="flex justify-between items-center w-full">
               <Link
                 style={{ fontFamily: "Doto, monospace" }}
-                className="bg-black dark:bg-transparent text-white px-4 py-2 hover:text-white"
+                className="text-black dark:text-white px-4 py-2"
                 to="/"
               >
-                music-sns
+                <span> music-sns</span>
               </Link>
               <div className="flex">
                 {session && (
-                  <IconButton
-                    type="button"
-                    onClick={handleClick}
-                    className="h-full"
-                    aria-controls={open ? "basic-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                    aria-description="User Actions"
-                  >
-                    <UserCircleIcon className="h-10 w-10 text-black dark:text-white" />
-                  </IconButton>
+                  <PopupMenu
+                    id="user-actions-menu"
+                    label="User actions menu"
+                    activator={
+                      <UserCircleIcon className="h-10 w-10 text-black dark:text-white" />
+                    }
+                    menuItems={[
+                      { label: "Profile", href: selfLink },
+                      { label: "Logout", onClick: logout },
+                    ]}
+                  />
                 )}
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  <MenuItem>
-                    <Link to={selfLink} onClick={handleClose}>
-                      Profile
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={logout}>Logout</MenuItem>
-                </Menu>
               </div>
             </div>
           </Toolbar>

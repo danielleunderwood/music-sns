@@ -1,29 +1,26 @@
-import { Dialog, IconButton } from "@mui/material";
 import Card from "../../components/Card";
-import useStore from "../../store";
 import { Tables } from "../../utils/database.types";
 import UserInfo from "./UserInfo";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import Actions from "./Actions";
+import Tag from "../../components/Tag";
+import useStore from "../../store";
+import ListenedTag from "./ListenedTag";
 import { useState } from "react";
-import Button from "../../components/Button";
-import supabase from "../../utils/supabase";
 
 type SongCardProps = Pick<Tables<"posts">, "text" | "url" | "user_id" | "id">;
 
 function SongCard({ url, text, user_id, id }: SongCardProps) {
   const { session } = useStore();
 
-  const [deleted, setDeleted] = useState(false);
+  const [visible, setVisible] = useState(true);
 
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const handleDeletion = () => {
+    setVisible(false);
+  };
 
-  if (deleted) {
+  if (!visible) {
     return null;
   }
-
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true);
-  };
 
   return (
     <Card>
@@ -36,53 +33,16 @@ function SongCard({ url, text, user_id, id }: SongCardProps) {
           sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox"
         />
       </div>
-      <div className="px-4 py-2 divide">
+      <div className="px-4 py-2">
+        <div className="flex gap-2">
+          <Tag type="poster">
+            <UserInfo userId={user_id} />
+          </Tag>
+          {session?.user.id !== user_id && <ListenedTag id={id} url={url} />}
+        </div>
         <div>{text}</div>
-        <div className="flex flex-row-reverse justify-between items-end">
-          <UserInfo userId={user_id} />
-          {session?.user.id === user_id && (
-            <IconButton
-              type="button"
-              onClick={handleDeleteClick}
-              aria-description="Delete"
-              size="small"
-            >
-              <TrashIcon className="h-4 w-4" />
-            </IconButton>
-          )}
-        </div>
+        <Actions id={id} user_id={user_id} onDelete={handleDeletion} />
       </div>
-      <Dialog
-        open={showDeleteDialog}
-        onClose={() => {
-          setShowDeleteDialog(false);
-        }}
-        PaperProps={{ component: Card }}
-      >
-        <div className="flex flex-col p-8 gap-6 bg-white dark:bg-zinc-900">
-          <h1>Delete post?</h1>
-          <div className="flex gap-4 justify-between">
-            <Button
-              type="button"
-              onClick={() => {
-                setShowDeleteDialog(false);
-              }}
-            >
-              <div className="px-2">Cancel</div>
-            </Button>
-            <Button
-              type="reset"
-              onClick={async () => {
-                await supabase.from("posts").delete().eq("id", id);
-
-                setDeleted(true);
-              }}
-            >
-              <div className="px-2">Delete</div>
-            </Button>
-          </div>
-        </div>
-      </Dialog>
     </Card>
   );
 }

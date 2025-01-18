@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      listens: {
+        Row: {
+          created_at: string;
+          id: number;
+          url: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          url: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          url?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       posts: {
         Row: {
           created_at: string;
@@ -37,6 +58,7 @@ export type Database = {
         Row: {
           avatar_url: string | null;
           display_name: string | null;
+          full_name: string | null;
           id: string;
           invite_code: string | null;
           updated_at: string | null;
@@ -45,6 +67,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null;
           display_name?: string | null;
+          full_name?: string | null;
           id: string;
           invite_code?: string | null;
           updated_at?: string | null;
@@ -53,6 +76,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null;
           display_name?: string | null;
+          full_name?: string | null;
           id?: string;
           invite_code?: string | null;
           updated_at?: string | null;
