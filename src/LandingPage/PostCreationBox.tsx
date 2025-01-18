@@ -4,6 +4,33 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { Tables } from "../utils/database.types";
+import UserFriendlyError, {
+  getSanitizedError,
+} from "../utils/userFriendlyError";
+
+const retrieveLinks = async (url: string) => {
+  let linksResult: Response;
+
+  try {
+    linksResult = await fetch(
+      `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(url)}`,
+    );
+  } catch {
+    throw new UserFriendlyError("Failed to request song information.");
+  }
+
+  if (linksResult.status > 300) {
+    if (linksResult.status < 500) {
+      throw new UserFriendlyError(
+        "Failed to retrieve song information. Cannot post.",
+      );
+    }
+
+    throw new UserFriendlyError(
+      "Failed to retrieve song information. Please try again in a few minutes.",
+    );
+  }
+};
 
 interface PostCreationBoxProps {
   onAdd: (
@@ -21,24 +48,16 @@ function PostCreationBox({ onAdd }: PostCreationBoxProps) {
   const addPost = async () => {
     setError("");
 
-    setUrl("");
+    try {
+      await retrieveLinks(url);
 
-    setText("");
+      setUrl("");
 
-    const linksResult = await fetch(
-      `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(url)}`,
-    );
+      setText("");
+    } catch (e) {
+      const error = getSanitizedError(e);
 
-    if (linksResult.status > 300) {
-      if (linksResult.status < 500) {
-        setError("Failed to retrieve song information. Cannot post.");
-
-        return;
-      }
-
-      setError(
-        "Failed to retrieve song information. Please try again in a few minutes.",
-      );
+      setError(error);
 
       return;
     }

@@ -10,5 +10,5 @@ export default defineConfig({
       plugins: [tailwindcss()],
     },
   },
-  base: "music-sns",
+  base: "/music-sns",
 });
