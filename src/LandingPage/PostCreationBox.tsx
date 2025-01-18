@@ -7,28 +7,27 @@ import { Tables } from "../utils/database.types";
 import UserFriendlyError, {
   getSanitizedError,
 } from "../utils/userFriendlyError";
+import supabase from "../utils/supabase";
 
 const retrieveLinks = async (url: string) => {
-  let linksResult: Response;
+  const linksResult = await supabase.functions.invoke("links", {
+    body: { url },
+  });
 
-  try {
-    linksResult = await fetch(
-      `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(url)}`,
-    );
-  } catch {
-    throw new UserFriendlyError("Failed to request song information.");
-  }
+  if (linksResult.error) {
+    if (linksResult.error.context.status > 300) {
+      if (linksResult.error.context.status < 500) {
+        throw new UserFriendlyError(
+          "Failed to retrieve song information. Cannot post.",
+        );
+      }
 
-  if (linksResult.status > 300) {
-    if (linksResult.status < 500) {
       throw new UserFriendlyError(
-        "Failed to retrieve song information. Cannot post.",
+        "Failed to retrieve song information. Please try again in a few minutes.",
       );
     }
 
-    throw new UserFriendlyError(
-      "Failed to retrieve song information. Please try again in a few minutes.",
-    );
+    throw new Error(linksResult.error);
   }
 };
 
