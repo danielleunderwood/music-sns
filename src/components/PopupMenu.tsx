@@ -62,6 +62,14 @@ function PopupMenu({ id, label, activator, menuItems }: PopupMenuProps) {
         MenuListProps={{
           "aria-labelledby": id,
         }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
       >
         {menuItems.map((menuItem, index) =>
           isLinkMenuItem(menuItem) ? (
