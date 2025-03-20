@@ -1,20 +1,39 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/vite.svg"
+    />
+    <link
+      rel="manifest"
+      href="/manifest.json"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>music-sns</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>music-sns</title>
-</head>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Doto:wght,ROND@900,100&display=swap");
+  </style>
 
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Doto:wght,ROND@900,100&display=swap');
-</style>
-
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-
+  <body>
+    <div id="root"></div>
+    <script
+      type="module"
+      src="/src/main.tsx"
+    ></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/music-sns/sw.js", {
+          scope: "/music-sns/",
+        });
+      }
+    </script>
+  </body>
 </html>
