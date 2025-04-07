@@ -9,6 +9,8 @@ import useProfile from "./useProfile";
 import { Status } from "../types/status";
 import Image from "../components/Image";
 import Posts from "../LandingPage/Posts";
+import TextButton from "../components/TextButton";
+import NotificationsStatus from "./NotificationsStatus";
 
 function Self() {
   const { session } = useStore();
@@ -54,6 +56,7 @@ function Self() {
 
   return (
     <div className="flex flex-col gap-4">
+      <NotificationsStatus />
       <Card>
         <form action={saveChanges}>
           <div className="flex flex-col sm:flex-row p-2 gap-2">
@@ -66,7 +69,7 @@ function Self() {
             <div className="flex flex-col gap-2">
               <TextField
                 label="Display name"
-                value={displayName || value.display_name}
+                value={displayName || value.display_name || ""}
                 onChange={(event) => {
                   setDisplayName(event.target.value);
 
@@ -76,15 +79,13 @@ function Self() {
               <div className="text-sm text-gray-500">
                 To invite someone to view your posts, you can have them scan the
                 QR code, or you can
-                <button
-                  type="button"
+                <TextButton
                   onClick={async () => {
                     await navigator.clipboard.writeText(link);
                   }}
-                  className="px-1 font-bold text-blue-600 dark:text-blue-400 transition rounded-full hover:bg-green-100 hover:dark:bg-green-900"
                 >
                   click here
-                </button>
+                </TextButton>
                 to copy a link you can send them.
               </div>
             </div>

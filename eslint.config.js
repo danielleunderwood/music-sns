@@ -16,6 +16,7 @@ export default [
     rules: {
       ...pluginHooks.configs.recommended.rules,
     },
+    env: { browser: true },
   },
   eslintPluginPrettierRecommended,
 ];

@@ -12,7 +12,6 @@ import useStore from "./store";
 import { Route, Routes } from "react-router";
 import UserPage from "./UserPage";
 import { Status } from "./types/status";
-import { useEffect } from "react";
 
 const theme = createTheme({
   colorSchemes: {
@@ -22,12 +21,6 @@ const theme = createTheme({
 
 function App() {
   const { setSession } = useStore();
-
-  useEffect(() => {
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission();
-    }
-  }, []);
 
   const { status } = useAsyncEffect({
     effect: async () => {
