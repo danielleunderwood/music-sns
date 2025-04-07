@@ -8,7 +8,6 @@ self.addEventListener("install", (e) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME);
       console.log("[Service Worker] Caching all: app shell and content");
-      await cache.addAll(["music-sns/assets/"]);
     })()
   );
 });
@@ -22,7 +21,7 @@ self.addEventListener("fetch", (e) => {
         return r;
       }
       const response = await fetch(e.request);
-      const cache = await caches.open(cacheName);
+      const cache = await caches.open(CACHE_NAME);
       console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
       cache.put(e.request, response.clone());
       return response;
