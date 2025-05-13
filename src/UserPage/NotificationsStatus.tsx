@@ -11,7 +11,10 @@ function NotificationsStatus() {
         Want to get notifications?
         <TextButton
           onClick={async () => {
-            setPermission(await Notification.requestPermission());
+            const notificationPermission =
+              await Notification.requestPermission();
+
+            setPermission(notificationPermission);
           }}
         >
           Click here

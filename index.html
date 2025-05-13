@@ -28,12 +28,5 @@
       type="module"
       src="/src/main.tsx"
     ></script>
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/music-sns/sw.js", {
-          scope: "/music-sns/",
-        });
-      }
-    </script>
   </body>
 </html>
