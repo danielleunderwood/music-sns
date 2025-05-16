@@ -1,43 +1,15 @@
-import {
-  Alert,
-  CircularProgress,
-  createTheme,
-  ThemeProvider,
-} from "@mui/material";
+import { Alert } from "@mui/material";
 import LandingPage from "./LandingPage";
-import TopNav from "./TopNav";
-import useAsyncEffect from "./hooks/useAsyncEffect";
-import supabase from "./utils/supabase";
-import useStore from "./store";
 import { Route, Routes } from "react-router";
 import UserPage from "./UserPage";
 import { Status } from "./types/status";
-
-const theme = createTheme({
-  colorSchemes: {
-    dark: true,
-  },
-});
+import useSession from "./hooks/useSession";
 
 function App() {
-  const { setSession } = useStore();
-
-  const { status } = useAsyncEffect({
-    effect: async () => {
-      const sessionData = await supabase.auth.getSession();
-
-      setSession(sessionData.data.session);
-
-      supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session);
-      });
-    },
-    deps: [],
-    initialValue: null,
-  });
+  const { status } = useSession();
 
   if (status === Status.Loading) {
-    return <CircularProgress />;
+    return <div className="bg-gray-500 animate-pulse"></div>;
   }
 
   if (status === Status.Error) {
@@ -49,17 +21,16 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <TopNav />
-      <div className="flex justify-center">
-        <div className="w-full max-w-[48rem] px-2 py-4">
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/user/:userId" element={<UserPage />} />
-          </Routes>
-        </div>
-      </div>
-    </ThemeProvider>
+    <Routes>
+      <Route
+        path="/"
+        element={<LandingPage />}
+      />
+      <Route
+        path="/user/:userId"
+        element={<UserPage />}
+      />
+    </Routes>
   );
 }
 
